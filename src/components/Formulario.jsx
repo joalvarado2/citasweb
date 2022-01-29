@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import Error from "./Error";
 
-const Formulario = () => {
+const Formulario = ({ pacientes, setPacientes }) => {
   const [nombre, setNombre] = useState("");
   const [propietario, setPropietario] = useState("");
   const [email, setEmail] = useState("");
@@ -8,6 +9,14 @@ const Formulario = () => {
   const [sintomas, setSintomas] = useState("");
 
   const [error, setError] = useState(false);
+
+  const generarId = () => {
+    // funcion que retorna  una simulacion de un id
+    const random = Math.random().toString(36).substr(2);
+    const fecha = Date.now().toString(36);
+
+    return random + fecha;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -18,7 +27,25 @@ const Formulario = () => {
       setError(true);
       return;
     }
+
     setError(false);
+    // Objeto paciente
+    const objetoPaciente = {
+      nombre,
+      propietario,
+      email,
+      fecha,
+      sintomas,
+      id: generarId(),
+    };
+    setPacientes([...pacientes, objetoPaciente]);
+
+    //Reiniciando el formulario por medio del state principal
+    setNombre("");
+    setPropietario("");
+    setEmail("");
+    setFecha("");
+    setSintomas("");
   };
 
   return (
@@ -35,9 +62,10 @@ const Formulario = () => {
         className="bg-white shadow-md rounded-lg py-10 px-5 mb-10"
       >
         {error && (
-          <div className="bg-red-800 text-white text-center p-3">
-            <p>Todos los campos son obligatorios</p>
-          </div>
+          <Error>
+            <p>Todos los campos son obligatorios</p>{" "}
+            {/* simula un props usando la palabra reserva children */}
+          </Error>
         )}
         <div className="mb-5">
           <label
